@@ -1,0 +1,67 @@
+//Funcionalidades CRUD
+package com.adopcion.dao;
+
+import com.adopcion.model.Animal;
+import com.adopcion.util.ConexionBD;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AnimalDAO {
+
+    // Insertar un nuevo animal
+    public void insertarAnimal(Animal animal) throws SQLException {
+        String sql = "INSERT INTO animales (nombre, tipo, edad) VALUES (?, ?, ?)";
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, animal.getNombre());
+            stmt.setString(2, animal.getTipo());
+            stmt.setInt(3, animal.getEdad());
+            stmt.executeUpdate();
+        }
+    }
+
+    // Consultar un animal por ID
+    public Animal consultarAnimal(int idAnimal) throws SQLException {
+        String sql = "SELECT * FROM animales WHERE id_animal = ?";
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idAnimal);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Animal(
+                        rs.getInt("id_animal"),
+                        rs.getString("nombre"),
+                        rs.getString("tipo"),
+                        rs.getInt("edad")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
+    // Actualizar un animal existente
+    public void actualizarAnimal(Animal animal) throws SQLException {
+        String sql = "UPDATE animales SET nombre = ?, tipo = ?, edad = ? WHERE id_animal = ?";
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, animal.getNombre());
+            stmt.setString(2, animal.getTipo());
+            stmt.setInt(3, animal.getEdad());
+            stmt.setInt(4, animal.getIdAnimal());
+            stmt.executeUpdate();
+        }
+    }
+
+    // Eliminar un animal
+    public void eliminarAnimal(int idAnimal) throws SQLException {
+        String sql = "DELETE FROM animales WHERE id_animal = ?";
+        try (Connection conn = ConexionBD.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idAnimal);
+            stmt.executeUpdate();
+        }
+    }
+}

@@ -1,0 +1,36 @@
+//Controlador principal
+package com.adopcion.controller;
+
+import com.adopcion.dao.AnimalDAO;
+import com.adopcion.model.Animal;
+
+public class Controlador {
+    public static void main(String[] args) {
+        AnimalDAO animalDAO = new AnimalDAO();
+
+        try {
+            // Insertar un animal
+            Animal nuevoAnimal = new Animal(0, "Luna", "Gato", 2);
+            animalDAO.insertarAnimal(nuevoAnimal);
+            System.out.println("Animal insertado exitosamente.");
+
+            // Consultar un animal
+            Animal animal = animalDAO.consultarAnimal(1);
+            if (animal != null) {
+                System.out.println("Animal encontrado: " + animal.getNombre());
+            }
+
+            // Actualizar un animal
+            animal.setNombre("Luna Bella");
+            animalDAO.actualizarAnimal(animal);
+            System.out.println("Animal actualizado.");
+
+            // Eliminar un animal
+            animalDAO.eliminarAnimal(1);
+            System.out.println("Animal eliminado.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
